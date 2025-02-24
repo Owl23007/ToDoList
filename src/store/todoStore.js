@@ -11,11 +11,16 @@ export const useTodoStore = defineStore('todo', {
   }),
 
   getters: {
-    completedTodos: (state) => state.todos.filter(todo => todo.completed && !todo.softDelete),
-    pendingTodos: (state) => state.todos.filter(todo => !todo.completed && !todo.softDelete),
+    // 修改 getter 过滤逻辑
+    completedTodos: (state) => state.todos.filter(todo => todo.completed),
+    pendingTodos: (state) => state.todos.filter(todo => !todo.completed),
+    deletedTodos: (state) => state.todos.filter(todo => todo.softDelete),
+    activeTodos: (state) => state.todos.filter(todo => !todo.softDelete),
     completionRate: (state) => {
-      if (state.todos.length === 0) return 0
-      return Math.round((state.completedTodos.length / state.todos.length) * 100)
+      const activeTodos = state.todos.filter(todo => !todo.softDelete)
+      if (activeTodos.length === 0) return 0
+      const completed = activeTodos.filter(todo => todo.completed)
+      return Math.round((completed.length / activeTodos.length) * 100)
     }
   },
 
@@ -66,26 +71,63 @@ export const useTodoStore = defineStore('todo', {
     },
 
     addTodo(todo) {
-      this.todos.push({
+      // 添加新的待办事项
+      const newTodo = {
         id: Date.now(),
-        ...todo,
-        completed: false
-      })
+        text: todo.text,
+        completed: false,
+        datetime: todo.datetime,
+        priority: todo.priority || 2,
+        tags: todo.tags || [],
+        createdAt: new Date().toISOString(),
+        softDelete: false
+      }
+      this.todos.push(newTodo)
       this.saveToStorage()
+      return newTodo
     },
 
     updateTodo(updatedTodo) {
       const index = this.todos.findIndex(t => t.id === updatedTodo.id)
       if (index !== -1) {
-        this.todos[index] = updatedTodo
+        // 保存更新时间
+        updatedTodo.updatedAt = new Date().toISOString()
+        this.todos[index] = { ...this.todos[index], ...updatedTodo }
+        this.saveToStorage()
+      }
+    },
+
+    completeTodo(todoId) {
+      const todo = this.todos.find(t => t.id === todoId)
+      if (todo) {
+        todo.completed = !todo.completed
+        todo.completedAt = todo.completed ? new Date().toISOString() : null
         this.saveToStorage()
       }
     },
 
     deleteTodo(todoId) {
+      // 软删除 - 将项目标记为已删除而不是真正删除
       const todo = this.todos.find(t => t.id === todoId)
-      if(todo) {
+      if (todo) {
         todo.softDelete = true
+        todo.deletedAt = new Date().toISOString()
+        this.saveToStorage()
+      }
+    },
+
+    // 永久删除
+    permanentlyDeleteTodo(todoId) {
+      this.todos = this.todos.filter(todo => todo.id !== todoId)
+      this.saveToStorage()
+    },
+
+    // 恢复已删除的待办事项
+    restoreTodo(todoId) {
+      const todo = this.todos.find(t => t.id === todoId)
+      if (todo) {
+        todo.softDelete = false
+        delete todo.deletedAt
         this.saveToStorage()
       }
     },
@@ -95,9 +137,10 @@ export const useTodoStore = defineStore('todo', {
       this.saveToStorage()
     },
 
-    setCurrentMode(mode) {
-      this.currentMode = mode
+    clearAllTodos() {
+      this.todos = []
       this.saveToStorage()
-    }
+    },
+
   }
 })

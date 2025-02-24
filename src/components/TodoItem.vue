@@ -38,7 +38,19 @@
     </div>
 
     <div class="actions">
-      <button class="delete-btn" @click="$emit('delete', todo.id)">
+      <button 
+        v-if="todo.softDelete" 
+        class="restore-btn" 
+        @click="$emit('restore', todo.id)"
+        title="恢复"
+      >
+        <i class="icon-restore">↺</i>
+      </button>
+      <button 
+        class="delete-btn" 
+        @click="handleDelete"
+        :title="todo.softDelete ? '永久删除' : '删除'"
+      >
         <i class="icon-delete">×</i>
       </button>
     </div>
@@ -100,7 +112,13 @@ const formatDateTime = computed(() => {
   })
 })
 
-defineEmits(['update', 'delete', 'edit'])
+const emit = defineEmits(['update', 'delete', 'restore'])
+
+const handleDelete = () => {
+  if (confirm('确定要删除该任务吗？此操作不可恢复。')) {
+    emit('delete', props.todo.id)
+  }
+}
 </script>
 
 <style scoped lang="scss">

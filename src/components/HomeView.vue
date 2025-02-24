@@ -14,14 +14,20 @@
           v-model="showCreatePanel"
           @create="todoStore.addTodo"
         ></quick-create-panel>
+        <!-- 添加清空按钮到这里 -->
+        <div class="panel-footer">
+          <button class="clear-btn" @click="handleClearAll">
+            清空所有数据
+          </button>
+        </div>
       </div>
 
       <!-- 右侧待办列表 -->
       <div class="right-panel">
         <TodoList
-          :todos="todoStore.todos"
+          :todos="todoStore.activeTodos"
           @update="todoStore.updateTodo"
-          @delete="todoStore.deleteTodo"
+          @delete="todoStore.permanentlyDeleteTodo"
           @reorder="todoStore.reorderTodos"
         ></TodoList>
       </div>
@@ -39,6 +45,12 @@ import QuickCreatePanel from '@/components/QuickCreatePanel.vue'
 
 const todoStore = useTodoStore()
 const showCreatePanel = ref(false) 
+
+const handleClearAll = () => {
+  if (confirm('确定要清空所有数据吗？此操作不可恢复！')) {
+    todoStore.clearAllTodos()
+  }
+}
 
 onMounted(() => {
   todoStore.initializeFromStorage()
@@ -87,6 +99,10 @@ onMounted(() => {
       }
     }
   }
+
+  .action-buttons {
+    margin-right: 20px;
+  }
 }
 
 .main-content {
@@ -100,6 +116,7 @@ onMounted(() => {
   height: calc(100vh - 100px); // 调整高度计算
   overflow: hidden; // 防止内容溢出
   padding: 24px;
+  padding-top: 0;
 }
 
 .left-panel {
@@ -119,6 +136,32 @@ onMounted(() => {
     &::-webkit-scrollbar-thumb {
       background: rgba(0, 0, 0, 0.1);
       border-radius: 3px;
+  }
+
+  .panel-footer {
+    margin-top: auto; // 将按钮推到底部
+    padding: 16px 0;
+    text-align: center;
+    
+    .clear-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      background-color: var(--danger-color);
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      width: 100%;
+      
+      &:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
   }
 }
 

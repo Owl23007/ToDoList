@@ -39,6 +39,7 @@ const themeClass = computed(() =>
   width: 100%;
   margin: 0;
   padding: 0;
+  padding-top: 0;
   height: 100%;
 }
 

@@ -23,12 +23,14 @@
         handle=".handle"
         ghost-class="ghost"
         @change="handleDragChange"
+        :disabled="showDeleted"
       >
         <template #item="{ element }">
           <todo-item
             :todo="element"
             @update="$emit('update', $event)"
-            @delete="$emit('delete', $event)"
+            @delete="$emit('delete', element.id)"
+            @restore="$emit('restore', $event)"
           />
         </template>
       </draggable>
@@ -52,20 +54,28 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update', 'delete', 'reorder'])
+const emit = defineEmits(['update', 'delete', 'reorder', 'restore'])
 
 const filterStatus = ref('all')
 const sortBy = ref('createdAt')
+const showDeleted = ref(false)
 
 // 过滤待办事项
 const filteredTodos = computed(() => {
   return props.todos.filter(todo => {
-    if (filterStatus.value === 'active') return !todo.completed
-    if (filterStatus.value === 'completed') return todo.completed
-    if (filterStatus.value === 'overdue') {
-      return new Date(todo.datetime) < new Date() && !todo.completed
+    // 先过滤软删除状态
+    if (todo.softDelete) return false;
+    
+    switch (filterStatus.value) {
+      case 'active':
+        return !todo.completed;
+      case 'completed':
+        return todo.completed;
+      case 'overdue':
+        return new Date(todo.datetime) < new Date() && !todo.completed;
+      default:
+        return true;
     }
-    return true
   })
 })
 
