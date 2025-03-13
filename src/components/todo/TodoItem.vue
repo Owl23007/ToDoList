@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="todo-item" 
     :class="{ 
       completed: todo.completed,

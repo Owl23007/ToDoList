@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../components/HomeView.vue'
+import HomeView from '../views/HomeView.vue'
 
 // 定义路由配置
 const routes = [

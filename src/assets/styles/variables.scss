@@ -1,0 +1,64 @@
+:root {
+    // 基础变量
+    --primary-color: #{map-get($theme, primary)};
+    --secondary-color: #{map-get($theme, secondary)};
+    --text-color: #{map-get($theme, text)};
+    
+    // 动态注入用户自定义变量
+    @each $key, $value in $custom-variables {
+      --#{$key}: #{$value};
+    }
+  }
+  
+  // 主题切换混入
+  @mixin theme-variables($theme) {
+    @each $key, $value in $theme {
+      --#{$key}: #{$value};
+    }
+  }
+
+// 基础颜色
+$colors: (
+  primary: var(--primary-color),
+  secondary: var(--secondary-color),
+  danger: var(--danger-color),
+  warning: var(--warning-color),
+  success: var(--success-color),
+);
+
+// 间距变量
+$spacing: (
+  xs: 4px,
+  sm: 8px,
+  md: 16px,
+  lg: 24px,
+  xl: 32px,
+);
+
+// 字体大小
+$font-sizes: (
+  xs: 0.75rem,    // 12px
+  sm: 0.875rem,   // 14px
+  md: 1rem,       // 16px
+  lg: 1.25rem,    // 20px
+  xl: 1.5rem,     // 24px
+  xxl: 2rem,      // 32px
+);
+
+// 字体权重
+$font-weights: (
+  light: 300,
+  regular: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+);
+
+// 断点
+$breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px,
+);

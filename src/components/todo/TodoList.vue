@@ -116,65 +116,38 @@ const handleDragChange = (evt) => {
 
 <style lang="scss" scoped>
 .todo-list {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-  overflow: hidden;
-
   .todo-header {
-    padding: 16px 24px;
-    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
 
     .filters {
       display: flex;
-      gap: 12px;
+      gap: 8px;
 
-      select {
-        padding: 8px 12px;
-        border-radius: 6px;
-        border: 1px solid #ddd;
-        background: white;
+      .filter-select,
+      .sort-select {
+        padding: 4px 8px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background: #fff;
         font-size: 0.9em;
-        outline: none;
-        cursor: pointer;
-
-        &:focus {
-          border-color: var(--primary-color);
-        }
       }
     }
   }
 
   .list-container {
-    flex: 1;
-    overflow-y: auto;
     padding: 16px;
 
-    &::-webkit-scrollbar {
-      width: 6px;
+    .empty-state {
+      text-align: center;
+      color: #999;
+      font-size: 1em;
+      padding: 16px;
     }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(0,0,0,0.1);
-      border-radius: 3px;
-    }
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 40px;
-    color: #999;
-    font-size: 0.95em;
-  }
-
-  .ghost {
-    opacity: 0.5;
-    background: #f8f9fa;
   }
 }
 </style>
-
