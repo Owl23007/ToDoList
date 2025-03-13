@@ -1,0 +1,22 @@
+{
+  "common": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "confirm": "Confirm"
+  },
+  "todo": {
+    "newTask": "New Task",
+    "placeholder": "What needs to be done?",
+    "noTasks": "No tasks yet",
+    "completed": "Completed",
+    "pending": "Pending",
+    "all": "All"
+  },
+  "errors": {
+    "required": "This field is required",
+    "generic": "Something went wrong"
+  }
+}

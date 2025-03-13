@@ -1,10 +1,9 @@
 <!-- App.vue -->
 <template>
-  <div :class="['app-container', themeStore.themeClass]">
+  <div class="app-container">
     <header class="app-header">
-      <theme-toggle />
+      <!-- 暂时移除 theme-toggle -->
     </header>
-    <!-- 主内容区 -->
     <main class="main-content">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
@@ -18,16 +17,20 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useTodoStore } from './stores/todoStore'
-import { useThemeStore } from './stores/themeStore'
-import ThemeToggle from './components/ui/ThemeToggle.vue'
+// 移除 theme store 导入
+// 移除 ThemeToggle 导入
 
 const todoStore = useTodoStore()
-const themeStore = useThemeStore()
 
 onMounted(() => {
   todoStore.initialize()
-  themeStore.initialize()
 })
+</script>
+
+<script>
+export default {
+  name: 'App',
+}
 </script>
 
 <style>
@@ -37,17 +40,16 @@ onMounted(() => {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
+  background-color: #ffffff;
+  color: #333333;
 }
 
 .app-header {
   display: flex;
   justify-content: flex-end;
   padding: 12px 16px;
-  background-color: var(--surface-color);
-  border-bottom: 1px solid var(--border-color);
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e8e8e8;
 }
 
 .main-content {
